@@ -22,6 +22,7 @@ import {
   FormMessage,
 } from "./ui/form";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
+import { useState } from "react";
 const loginFormSchema = z.object({
   email: z.string().email(),
   password: z
@@ -31,8 +32,10 @@ const loginFormSchema = z.object({
 });
 
 export function LoginForm() {
+  const [errorState, setErrorState] = useState("");
   const navigate = useNavigate();
   const signIn = useSignIn();
+
   const loginForm = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -42,24 +45,39 @@ export function LoginForm() {
   });
 
   async function onSubmit(values: z.infer<typeof loginFormSchema>) {
-    console.log(values);
-    const res = await axios.post("http://localhost:3000/api/login", values);
-    if (
-      signIn({
-        auth: {
-          token: res.data.accessToken,
-          type: "Bearer",
-        },
-        userState: {
-          email: res.data.email,
-          id: res.data.id,
-          roleid: res.data.roleid,
-        },
-      })
-    ) {
-      navigate("/");
-    } else {
-      console.log("error");
+    try {
+      const res = await axios.post("http://localhost:3000/api/login", values);
+      if (
+        signIn({
+          auth: {
+            token: res.data.accessToken,
+            type: "Bearer",
+          },
+          userState: {
+            email: res.data.email,
+            id: res.data.id,
+            roleid: res.data.roleid,
+          },
+        })
+      ) {
+        navigate("/");
+      } else {
+        console.log();
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error(
+          "Ошибка при входе:",
+          error.response?.data || error.message
+        );
+        setErrorState(
+          "Ошибка при входе: " +
+            (error.response?.data?.message || "Неизвестная ошибка")
+        );
+      } else {
+        console.error("Неизвестная ошибка:", error);
+        setErrorState("Неизвестная ошибка при входе");
+      }
     }
   }
 
@@ -80,7 +98,7 @@ export function LoginForm() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Username</FormLabel>
+                    <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input placeholder="@example" {...field} />
                     </FormControl>
@@ -94,16 +112,22 @@ export function LoginForm() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Username</FormLabel>
+                      <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input placeholder="******" {...field} />
+                        <Input
+                          placeholder="******"
+                          type="password"
+                          id="password"
+                          autoComplete="current-password"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
-
+              <FormMessage>{errorState} </FormMessage>
               <Button type="submit" className="w-full">
                 Login
               </Button>
