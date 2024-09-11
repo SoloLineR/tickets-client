@@ -18,7 +18,7 @@ function App() {
       </Routes>
 
       <footer className="mt-auto mb-5">
-        <p className="text-center"> Project by SoloLineR</p>
+        <p className="text-center"> Project by SoloLineR </p>
       </footer>
     </div>
   );

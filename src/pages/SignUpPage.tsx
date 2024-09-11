@@ -2,7 +2,7 @@ import SignUpForm from "@/components/authentication-03";
 
 export default function SignUpPage() {
   return (
-    <div className="flex  items-center justify-center mt-16 ">
+    <div className="flex flex-1  items-center justify-center   ">
       <SignUpForm />
     </div>
   );

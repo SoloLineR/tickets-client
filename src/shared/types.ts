@@ -6,3 +6,8 @@ export type Ticket = {
   price: number;
   img: string;
 };
+export type IUserData = {
+  email: string;
+  roleid: number;
+  userid: number;
+};

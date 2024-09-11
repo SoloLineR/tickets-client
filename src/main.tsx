@@ -5,10 +5,11 @@ import "./index.css";
 import AuthProvider from "react-auth-kit";
 import { BrowserRouter } from "react-router-dom";
 import createStore from "react-auth-kit/createStore";
-
+import { Provider } from "react-redux";
+import { reduxStore } from "./shared/store/store.ts";
 const store = createStore({
   authName: "_auth",
-  authType: "cookie",
+  authType: "localstorage",
   cookieDomain: window.location.hostname,
   cookieSecure: false,
 });
@@ -16,9 +17,11 @@ const store = createStore({
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <Provider store={reduxStore}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </Provider>
     </AuthProvider>
   </StrictMode>
 );
