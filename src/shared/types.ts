@@ -6,8 +6,15 @@ export type Ticket = {
   price: number;
   img: string;
 };
-export type IUserData = {
-  email: string;
+
+export type UserInfo = {
+  id: number;
   roleid: number;
-  userid: number;
+  email: string;
+  money: number;
 };
+
+export type IUserData = Omit<UserInfo, "money">;
+
+export type BrouthTicketsInfo = Pick<UserInfo, "id"> &
+  Pick<Ticket, "img" | "title" | "price"> & { activated_id: number };

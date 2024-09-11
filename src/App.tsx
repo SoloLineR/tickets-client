@@ -5,6 +5,7 @@ import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import NavigationBar from "./components/NavigationBar";
 import TicketsPage from "./pages/TicketsPage";
+import UserPage from "./pages/UserPage";
 
 function App() {
   return (
@@ -15,6 +16,8 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signUp" element={<SignUpPage />} />
         <Route path="/tickets" element={<TicketsPage />} />
+        <Route path="/profile" element={<UserPage />} />
+        <Route path="*" element={<HomePage />} />
       </Routes>
 
       <footer className="mt-auto mb-5">
