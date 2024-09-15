@@ -6,6 +6,7 @@ import HomePage from "./pages/HomePage";
 import NavigationBar from "./components/NavigationBar";
 import TicketsPage from "./pages/TicketsPage";
 import UserPage from "./pages/UserPage";
+import AdminPage from "./pages/AdminPage";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/signUp" element={<SignUpPage />} />
         <Route path="/tickets" element={<TicketsPage />} />
         <Route path="/profile" element={<UserPage />} />
+        <Route path="/admin" element={<AdminPage />} />
         <Route path="*" element={<HomePage />} />
       </Routes>
 

@@ -9,6 +9,13 @@ export const ticketsApi = mainApi.injectEndpoints({
     getTicket: builder.query<Ticket, number>({
       query: (id) => `/tickets/${id}`,
     }),
+    validateTicket: builder.mutation<{ message: string }, string>({
+      query: (id) => ({
+        url: "/pdf/validate",
+        method: "POST",
+        body: { activated_id: id },
+      }),
+    }),
   }),
   overrideExisting: true,
 });
