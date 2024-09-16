@@ -79,6 +79,7 @@ const QrReader = () => {
         scanner?.current?.stop();
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ❌ If "camera" is not allowed in browser permissions, show an alert.
@@ -105,7 +106,7 @@ const QrReader = () => {
 
       <>
         <p
-          className=" absolute top-0 left-0 z-[99999] w-[300px] text-wrap   bg-white "
+          className=" absolute top-0 left-0 z-[99999] w-[300px] text-wrap   bg-white font-sans "
           // style={{
           //   position: "absolute",
           //   top: 0,
@@ -116,9 +117,11 @@ const QrReader = () => {
         >
           Scanned Result: {scannedResult}
         </p>
-        <Button className="mt-4" onClick={continueScanning}>
-          Start
-        </Button>
+        {scannedResult === "" ? null : (
+          <Button className="mt-4" onClick={continueScanning}>
+            Start
+          </Button>
+        )}
       </>
     </div>
   );

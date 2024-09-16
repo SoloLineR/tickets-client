@@ -5,16 +5,58 @@ import { userApi } from "@/model/user/userApi";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-
+import axios from "axios";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import { useState } from "react";
 export default function UserPage() {
+  const [pdfLoadingState, setPdfLoadingState] = useState<boolean>(false);
   const { data: user, isLoading } = userApi.useGetUserInfoQuery();
   const { data: tickets, isLoading: isLoadingTickets } =
     userApi.useGetTicketsBroughtByUserQuery();
   console.log(tickets);
 
+  const authorizationToken = useAuthHeader();
+
+  async function getPdfTicket(id: string) {
+    setPdfLoadingState(true);
+    axios
+      .post(
+        "http://localhost:3000/api/pdf",
+        {
+          activated_id: id,
+        },
+        {
+          withCredentials: true,
+          responseType: "blob",
+          onDownloadProgress: (progressEvent) => {
+            console.log(progressEvent);
+          },
+          headers: {
+            Authorization: `${authorizationToken}`,
+          },
+        }
+      )
+      .then((res) => {
+        const url = window.URL.createObjectURL(res.data);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "ticket.pdf";
+        a.style.display = "none";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => setPdfLoadingState(false));
+  }
+
   if (!user || isLoading || isLoadingTickets || !tickets) {
     return <Loader />;
   }
+
   return (
     <div className="flex flex-col gap-2 lg:flex-row">
       <UserCard user={user} />
@@ -31,7 +73,13 @@ export default function UserPage() {
                   <div className="text-lg ">{ticket.title} </div>
                   <img src={ticket.img} className="max-w-28 " alt="" />
                   <p className="text-lg "> Price:{ticket.price}</p>
-                  <Button>Скачать PDF</Button>
+                  <Button
+                    className="flex gap-4"
+                    onClick={() => getPdfTicket(ticket.activated_id)}
+                  >
+                    Скачать PDF
+                    {pdfLoadingState ? <Loader size="SMALL" /> : null}
+                  </Button>
                 </div>
                 <Separator className="my-2" />
               </div>

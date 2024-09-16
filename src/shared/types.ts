@@ -17,4 +17,4 @@ export type UserInfo = {
 export type IUserData = Omit<UserInfo, "money">;
 
 export type BrouthTicketsInfo = Pick<UserInfo, "id"> &
-  Pick<Ticket, "img" | "title" | "price"> & { activated_id: number };
+  Pick<Ticket, "img" | "title" | "price"> & { activated_id: string };
